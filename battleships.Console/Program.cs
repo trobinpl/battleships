@@ -47,8 +47,12 @@ do
 {
     Console.WriteLine("Provide coordinates to shoot");
     var coordinate = Console.ReadLine();
-    var result = game.MakeMove(coordinate!);
-    Console.WriteLine(result);
+    (MoveResult playerMoveResult, MoveResult? computerMoveResult) = game.MakeMove(coordinate!);
+    Console.WriteLine($"[Player] {playerMoveResult}");
+    if (computerMoveResult is not null)
+    {
+        Console.WriteLine($"[Computer] {computerMoveResult}");
+    }
 }
 while (!game.IsOver);
 

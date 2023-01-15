@@ -41,11 +41,13 @@ public class Game
         }
     }
 
-    public MoveResult MakeMove(Coordinate shotCoordinate)
+    public (MoveResult PlayerMoveResult, MoveResult? ComputerMoveResult) MakeMove(Coordinate shotCoordinate)
     {
         var moveAgainst = _players[PlayerType.Computer];
 
         var playerShootResult = moveAgainst.Shoot(shotCoordinate);
+        var playerMoveResult = new MoveResult(shotCoordinate, playerShootResult, moveAgainst.Lost);
+        MoveResult? computerMoveResult = null;
 
         if (moveAgainst.Lost)
         {
@@ -53,17 +55,21 @@ public class Game
         }
         else
         {
-            MakeComputerMove();
+            computerMoveResult = MakeComputerMove();
             if (_players[PlayerType.Human].Lost)
             {
                 Winner = PlayerType.Computer;
             }
+
         }
 
-        return new MoveResult(playerShootResult, moveAgainst.Lost);
+        return (playerMoveResult, computerMoveResult);
     }
-    private void MakeComputerMove()
+    private MoveResult MakeComputerMove()
     {
-        _players[PlayerType.Human].Shoot(_players[PlayerType.Human].Grid.GetRandomCoordinate(Settings.Random));
+        var moveAgainst = _players[PlayerType.Human];
+        var shotCoordinate = moveAgainst.Grid.GetRandomCoordinate(Settings.Random);
+        var shootResult = moveAgainst.Shoot(shotCoordinate);
+        return new MoveResult(shotCoordinate, shootResult, moveAgainst.Lost);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using battleships.Domain.Gameplay.ShipsGeneration;
-using battleships.Domain.Ships;
-using Microsoft.VisualStudio.CodeCoverage;
 
 namespace battleships.Tests.Gameplay;
 
@@ -23,18 +21,18 @@ public class GameTests
         game.Prepare(playerShips);
 
         // Act
-        var firstMoveResult = game.MakeMove("A1");
-        var secondMoveResult = game.MakeMove("A2");
+        (MoveResult playerFirstMoveResult, _) = game.MakeMove("A1");
+        (MoveResult playerSecondMoveResult, _) = game.MakeMove("A2");
 
         // Assert
-        firstMoveResult.Result.ShootResult.Should().Be(ShootResult.Hit);
-        firstMoveResult.Result.HitShipName.Should().Be("Destroyer");
-        firstMoveResult.Result.HitShipStatus.Should().Be(ShipStatus.Afloat);
-        firstMoveResult.GameOver.Should().BeFalse();
+        playerFirstMoveResult.Result.ShootResult.Should().Be(ShootResult.Hit);
+        playerFirstMoveResult.Result.HitShipName.Should().Be("Destroyer");
+        playerFirstMoveResult.Result.HitShipStatus.Should().Be(ShipStatus.Afloat);
+        playerFirstMoveResult.GameOver.Should().BeFalse();
 
-        secondMoveResult.Result.ShootResult.Should().Be(ShootResult.Hit);
-        secondMoveResult.Result.HitShipName.Should().Be("Destroyer");
-        secondMoveResult.Result.HitShipStatus.Should().Be(ShipStatus.Sunk);
-        secondMoveResult.GameOver.Should().BeTrue();
+        playerSecondMoveResult.Result.ShootResult.Should().Be(ShootResult.Hit);
+        playerSecondMoveResult.Result.HitShipName.Should().Be("Destroyer");
+        playerSecondMoveResult.Result.HitShipStatus.Should().Be(ShipStatus.Sunk);
+        playerSecondMoveResult.GameOver.Should().BeTrue();
     }
 }
