@@ -3,13 +3,14 @@ using battleships.Domain.Gameplay.ShipsGeneration;
 
 List<Ship> ships = new List<Ship>();
 
-Console.WriteLine("Please provide ships positions by specyfing first ship coordinate and it's orientation (for example A4 Horizontal)");
-Console.WriteLine("Allowed ship orientations: Horizontal or Vertical");
+Console.WriteLine("Please provide ships positions by specyfing first ship coordinate and it's orientation (for example A4 H)");
+Console.WriteLine("Allowed ship orientations: H for horizontal or V for vertical");
 Console.WriteLine("Default ships requirements are:");
 Console.WriteLine("- 1 carrier (5 blocks)");
 Console.WriteLine("- 2 battleships (4 blocks)");
 Console.WriteLine("- 3 cruisers (3 blocks)");
 Console.WriteLine("- 4 destroyers (2 blocks)");
+
 
 Console.WriteLine("Carrier#1 position");
 (Coordinate carrierPosition, ShipOrientation carrierOrientation) = GetFromInput(Console.ReadLine()!);
@@ -37,6 +38,7 @@ for (int i = 1; i <= 4; i++)
 }
 
 var game = new Game(new GameSettings(new RandomShipsGenerationStrategy()));
+
 game.Prepare(ships);
 
 Console.WriteLine("Ships ready. Game begins!");
@@ -55,5 +57,5 @@ Console.WriteLine($"Game over. Winner: {game.Winner}");
 static (Coordinate position, ShipOrientation orientation) GetFromInput(string input)
 {
     var splitInput = input.Split(" ");
-    return ((Coordinate)splitInput[0], Enum.Parse<ShipOrientation>(splitInput[1]));
+    return ((Coordinate)splitInput[0], splitInput[1].ToUpperInvariant() == "H" ? ShipOrientation.Horizontal : ShipOrientation.Vertical);
 }

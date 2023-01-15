@@ -11,11 +11,11 @@ public class Game
 
     private readonly Dictionary<PlayerType, Player> _players;
 
-    private readonly GameSettings _gameSettings;
+    public GameSettings Settings { get; private set; }
 
     public Game(GameSettings settings)
     {
-        _gameSettings = settings;
+        Settings = settings;
         _players = new Dictionary<PlayerType, Player>
         {
             [PlayerType.Human] = new Player(new Grid(settings.GridSize)),
@@ -35,7 +35,7 @@ public class Game
             _players[PlayerType.Human].Grid.Place(ship);
         }
 
-        foreach (var ship in _gameSettings.ComputerShipsGenerationStrategy.GenerateShips(_gameSettings.ShipsRequirements, _players[PlayerType.Computer].Grid))
+        foreach (var ship in Settings.ComputerShipsGenerationStrategy.GenerateShips(Settings.ShipsRequirements, _players[PlayerType.Computer].Grid))
         {
             _players[PlayerType.Computer].Grid.Place(ship);
         }
@@ -64,6 +64,6 @@ public class Game
     }
     private void MakeComputerMove()
     {
-        _players[PlayerType.Human].Shoot(_players[PlayerType.Human].Grid.GetRandomCoordinate(_gameSettings.Random));
+        _players[PlayerType.Human].Shoot(_players[PlayerType.Human].Grid.GetRandomCoordinate(Settings.Random));
     }
 }
