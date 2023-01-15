@@ -1,21 +1,45 @@
-﻿using battleships.Domain.Gameplay.ShipsGeneration;
+﻿using battleships.Domain.Board;
+using battleships.Domain.Gameplay.ShipsGeneration;
 
-var ships = new List<Ship>
+List<Ship> ships = new List<Ship>();
+
+Console.WriteLine("Please provide ships positions by specyfing first ship coordinate and it's orientation (for example A4 Horizontal)");
+Console.WriteLine("Allowed ship orientations: Horizontal or Vertical");
+Console.WriteLine("Default ships requirements are:");
+Console.WriteLine("- 1 carrier (5 blocks)");
+Console.WriteLine("- 2 battleships (4 blocks)");
+Console.WriteLine("- 3 cruisers (3 blocks)");
+Console.WriteLine("- 4 destroyers (2 blocks)");
+
+Console.WriteLine("Carrier#1 position");
+(Coordinate carrierPosition, ShipOrientation carrierOrientation) = GetFromInput(Console.ReadLine()!);
+ships.Add(new Carrier(carrierPosition, carrierOrientation));
+
+for (int i = 1; i <= 2; i++)
 {
-    new Carrier("A1", ShipOrientation.Horizontal),
-    new Battleship("A10", ShipOrientation.Vertical),
-    new Battleship("C4", ShipOrientation.Horizontal),
-    new Cruiser("G3", ShipOrientation.Horizontal),
-    new Cruiser("H8", ShipOrientation.Vertical),
-    new Cruiser("D1", ShipOrientation.Vertical),
-    new Destroyer("E5", ShipOrientation.Horizontal),
-    new Destroyer("J1", ShipOrientation.Horizontal),
-    new Destroyer("I4", ShipOrientation.Horizontal),
-    new Destroyer("A7", ShipOrientation.Horizontal),
-};
+    Console.WriteLine($"Battleship#{i} position");
+    (Coordinate position, ShipOrientation orientation) = GetFromInput(Console.ReadLine()!);
+    ships.Add(new Battleship(position, orientation));
+}
 
-var game = new Game(new GameSettings(new RandomShipsGenerationStrategy())) {};
+for (int i = 1; i <= 3; i++)
+{
+    Console.WriteLine($"Cruiser#{i} position");
+    (Coordinate position, ShipOrientation orientation) = GetFromInput(Console.ReadLine()!);
+    ships.Add(new Cruiser(position, orientation));
+}
+
+for (int i = 1; i <= 4; i++)
+{
+    Console.WriteLine($"Destroyer#{i} position");
+    (Coordinate position, ShipOrientation orientation) = GetFromInput(Console.ReadLine()!);
+    ships.Add(new Destroyer(position, orientation));
+}
+
+var game = new Game(new GameSettings(new RandomShipsGenerationStrategy()));
 game.Prepare(ships);
+
+Console.WriteLine("Ships ready. Game begins!");
 
 do
 {
@@ -27,3 +51,9 @@ do
 while (!game.IsOver);
 
 Console.WriteLine($"Game over. Winner: {game.Winner}");
+
+static (Coordinate position, ShipOrientation orientation) GetFromInput(string input)
+{
+    var splitInput = input.Split(" ");
+    return ((Coordinate)splitInput[0], Enum.Parse<ShipOrientation>(splitInput[1]));
+}
